@@ -44,13 +44,28 @@ th {
 }
 
 #cardToUse{
-  margin-left: 250px;
+  margin-left: 20%;
 }
 
 #cardToUseText{
-  margin-left: 225px;
+  margin-left: 20%;
 }
 
+h1, h3 {
+  text-align: center;
+}
+#showRules{
+  display: none;
+}
+
+.btn{
+  margin:auto;
+  display:block;
+}
+
+#showScore{
+  display: none;
+}
 /*
 .over {
     width: 30px;
