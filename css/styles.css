@@ -91,6 +91,14 @@ th{
   width: 60%;
   border: none;
 }
+
+#showGame {
+  display: none;
+}
+#startScreen{
+  margin-left: 30%;
+  margin-right: 30%;
+}
 /*.over {
     width: 30px;
     position:absolute;

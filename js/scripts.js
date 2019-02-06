@@ -413,11 +413,13 @@ console.log(cards);
 $(document).ready(function() {
   $("#form").submit(function(event){
     event.preventDefault();
-
     var theName = $("input#name").val();
 
-    $("#form").hide();
-    $("#showScore").fadeToggle();
-    $("span#name").text(theName.charAt(0).toUpperCase()+theN.slice(1));
+    var player = new Player(theName);
+
+    $("#startScreen").hide();
+    $(".showScore").show();
+    $("span#name").text(theName.charAt(0).toUpperCase()+theName.slice(1));
+    $("#showGame").fadeToggle();
   });
 });
