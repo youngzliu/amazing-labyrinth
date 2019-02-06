@@ -82,7 +82,7 @@
                       </p>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-success btn-default" data-dismiss="modal">Close</button>
                     </div>
                   </div>
                 </div>
@@ -92,12 +92,12 @@
               <div class="form-group has-success">
                 <label class="control-label" for="name">Enter your name here:</label>
                 <input type="text" class="form-control" id="name" aria-describedby="helpBlock2">
-                <span id="helpBlock2" class="help-block">You will see the score below.</span>
+                <span id="helpBlock2" class="help-block">Good luck in hunting all treasures!</span>
               </div>
               <button type="submit" class="btn btn-success btn-lg">Lets Play!</button>
             </form>
-            <div id="showScore">
-              SCORE HERE
+            <div class="well" id="showScore">
+              <h3>Dear, <span id="name"></span>, here's your score:</h3>
             </div>
           </div>
           <div class="col-sm-9">
@@ -105,7 +105,7 @@
             <table id="board"><tr id="-1"><th></th><th></th><th id="arrow0_1"><img class="rotate180 arrow" src="img/arrow.png"></th><th></th><th id="arrow0_3"><img class="rotate180 arrow" src="img/arrow.png"></th><th></th><th></th></tr><tr id="0"><th></th><th id="card0_0"><img class="rotate270" src="img/corner.png"></th><th id="card0_1"><img class="rotate270" src="img/t-shape.png"></th><th id="card0_2"><img class="rotate90" src="img/t-shape.png"></th><th id="card0_3"><img class="rotate90" src="img/corner.png"></th><th id="card0_4"><img class="rotate90" src="img/straight.png"></th><th></th></tr><tr id="1"><th id="arrow1_0"><img class="rotate90 arrow" src="img/arrow.png"></th><th id="card1_0"><img class="rotate0" src="img/straight.png"></th><th id="card1_1"><img class="rotate90" src="img/t-shape.png"></th><th id="card1_2"><img class="rotate270" src="img/t-shape.png"></th><th id="card1_3"><img class="rotate90" src="img/corner.png"></th><th id="card1_4"><img class="rotate180" src="img/straight.png"></th><th id="arrow1_4"><img class="rotate270 arrow" src="img/arrow.png"></th></tr><tr id="2"><th></th><th id="card2_0"><img class="rotate0" src="img/straight.png"></th><th id="card2_1"><img class="rotate270" src="img/corner.png"></th><th id="card2_2"><img class="rotate270" src="img/t-shape.png"></th><th id="card2_3"><img class="rotate270" src="img/t-shape.png"></th><th id="card2_4"><img class="rotate90" src="img/straight.png"></th><th></th></tr><tr id="3"><th id="arrow3_0"><img class="rotate90 arrow" src="img/arrow.png"></th><th id="card3_0"><img class="rotate90" src="img/t-shape.png"></th><th id="card3_1"><img class="rotate0" src="img/straight.png"></th><th id="card3_2"><img class="rotate90" src="img/t-shape.png"></th><th id="card3_3"><img class="rotate0" src="img/corner.png"></th><th id="card3_4"><img class="rotate90" src="img/corner.png"></th><th id="arrow3_4"><img class="rotate270 arrow" src="img/arrow.png"></th></tr><tr id="4"><th></th><th id="card4_0"><img class="rotate270" src="img/t-shape.png"></th><th id="card4_1"><img class="rotate270" src="img/t-shape.png"></th><th id="card4_2"><img class="rotate180" src="img/straight.png"></th><th id="card4_3"><img class="rotate270" src="img/t-shape.png"></th><th id="card4_4"><img class="rotate270" src="img/t-shape.png"></th><th></th></tr><tr id="3"><th></th><th></th><th id="arrow4_1"><img class="rotate0 arrow" src="img/arrow.png"></th><th></th><th id="arrow4_3"><img class="rotate0 arrow" src="img/arrow.png"></th><th></th><th></th></tr></table>
             <br>
             <div id="cardToUse"><img class="rotate180" src="img/corner.png" id="freeCard"></div>
-            <p id="cardToUseText">Click to rotate the image.</p>
+            <h4 id="cardToUseText">Click to rotate the image.</h4>
           </div>
         </div>
       </div>
