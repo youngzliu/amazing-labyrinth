@@ -1,14 +1,26 @@
+img.highlight{
+  border: 5px solid #ffa64d; //#E0624C;
+}
+
 img{
-  width: 100px;
+  width: 120px;
+  border: 2px solid #A45F24; //#664B2F; //#513324; //#D57719;//#E0624C;
+  border-radius: 35px;
 }
 
 th {
   text-align: center;
 }
 
+body {
+  background-color: #F0E5CF;
+}
+
+
 .arrow {
   width: 50px;
   padding: 5px;
+  border: 0px solid #E0624C; //#d13c3c;
 }
 
 .rotate0 {
@@ -43,16 +55,6 @@ th {
     transform: rotate(270deg);
 }
 
-#cardToUse{
-  margin-left: 20%;
-}
-
-#cardToUseText{
-  margin-left: 20%;
-  margin-top: 3%;
-  color: #5cb85c;
-}
-
 h1, h3 {
   text-align: center;
 }
@@ -68,8 +70,28 @@ h1, h3 {
 #showScore{
   display: none;
 }
-/*
-.over {
+
+margin-left: 20%;
+}
+
+#cardToUseText{
+margin-left: 20%;
+margin-top: 3%;
+color: #5cb85c;
+}
+
+th{
+  position: relative;
+}
+
+.treasureImage{
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  width: 60%;
+  border: none;
+}
+/*.over {
     width: 30px;
     position:absolute;
     top: 70px;

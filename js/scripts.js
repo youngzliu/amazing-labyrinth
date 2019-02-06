@@ -418,6 +418,6 @@ $(document).ready(function() {
 
     $("#form").hide();
     $("#showScore").fadeToggle();
-    $("span#name").text(theName.charAt(0).toUpperCase()+theName.slice(1));
+    $("span#name").text(theName.charAt(0).toUpperCase()+theN.slice(1));
   });
 });
