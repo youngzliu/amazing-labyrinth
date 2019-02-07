@@ -14,16 +14,19 @@ function Game(size){
 Game.prototype.initialize = function(){
   this.board = new Board(this.boardSize);
   this.board.initializeCards();
-  //Add method to initialize players here
-  // var player1 = new Player("Player 1");
-  // this.addPlayer(player1);
-  this.initializeTreasures();
+  // initialize Players positions, treasures positions
   this.userInterface = new UserInterface();
   //this.userInterface.onCardClick = this.clickCard;
   this.userInterface.onArrowClick = this.clickArrow;
   //this.userInterface.assignRandomImages(this.boardSize);
   this.userInterface.showBoard(this.boardSize, this.board.cards);
   this.userInterface.attachListeners();
+}
+
+function Player(inputName){
+  this.name = inputName;
+  this.fileName = "";
+  this.treasures = [];
 }
 
 Game.prototype.initializeTreasures = function(){
@@ -59,11 +62,6 @@ Game.prototype.initializeTreasures = function(){
 
 Game.prototype.switchPlayer = function(){
   this.currentPlayer = this.players[(this.currentPlayer.id + 1) % this.players.length];
-}
-
-function Player(name){
-  this.name = name;
-  this.treasures = [];
 }
 
 Game.prototype.checkTreasure = function(x, y){
@@ -109,6 +107,7 @@ Game.prototype.setGameOver = function(over){
 }
 
 Game.prototype.clickCard = function(x, y){
+
   if((!this.gameOver) && (this.gameState % 2 === 1) && (this.accessibleCards.indexOf(this.board.cards[x][y]) >= 0)){
     var playerCard = this.board.findPlayer(this.currentPlayer);
     if ((this.board.cards[x][y].player === null) || (this.board.cards[x][y].player === this.currentPlayer)) {
@@ -144,6 +143,7 @@ Game.prototype.clickArrow = function(x, y){
     game.userInterface.showBoard(game.boardSize, game.board.cards);
     this.userInterface.HighlightCards(this.accessibleCards, true);
   }
+
 }
 
 Game.prototype.addPlayer = function(player){
@@ -157,8 +157,9 @@ Game.prototype.addPlayer = function(player){
   }
   this.players.push(player);
   player.id = this.playerId;
+  player.fileName = "Player" + (player.id + 1).toString();
 
-  this.board.placePlayer(player, this.defaulPlayerPosition[player.id][0], this.defaulPlayerPosition[player.id][1]);
+  this.board.placeItem(player.id, this.defaulPlayerPosition[player.id][0], this.defaulPlayerPosition[player.id][1]);
   this.playerId += 1;
 
   return true;
@@ -170,10 +171,8 @@ function Board(size) {
 
 Board.prototype.pushingCard = function(x, y, pushCard){
   var spareCard; //The card that will get pushed out
-
-  if(y === 0 || y === this.cards.length - 1) { //Inserting the card into a row
+  if(y === 0 || y === this.cards.length - 1){ //Inserting the card into a row
     if(y === 0){ //Direction is left to right
-      this.leavePlayerOnBoard(this.cards[x][this.cards.length - 1], this.freeCard);
       spareCard = this.cards[x][this.cards.length - 1];
       spareCard.x = -1; //Resetting cooirdinates of spare card
       spareCard.y = -1;
@@ -185,9 +184,7 @@ Board.prototype.pushingCard = function(x, y, pushCard){
       this.cards[x][0].x = x;
       this.cards[x][0].y = 0;
       this.freeCard = spareCard;
-
     }else{ //Direction is right to left
-      this.leavePlayerOnBoard(this.cards[x][0], this.freeCard);
       spareCard = this.cards[x][0];
       spareCard.x = -1; //Resetting cooirdinates of spare card
       spareCard.y = -1;
@@ -200,9 +197,8 @@ Board.prototype.pushingCard = function(x, y, pushCard){
       this.cards[x][this.cards.length - 1].y = this.cards.length - 1;
       this.freeCard = spareCard;
     }
-  } else { //Inserting the card into a column
+  }else{ //Inserting the card into a column
     if(x === 0){ //Direction is top to bottom
-      this.leavePlayerOnBoard(this.cards[this.cards.length - 1][y], this.freeCard);
       spareCard = this.cards[this.cards.length - 1][y];
       spareCard.x = -1;
       spareCard.y = -1;
@@ -214,9 +210,7 @@ Board.prototype.pushingCard = function(x, y, pushCard){
       this.cards[0][y].x = 0;
       this.cards[0][y].y = y;
       this.freeCard = spareCard;
-
     }else{ //Direction is bottom to top
-      this.leavePlayerOnBoard(this.cards[0][y], this.freeCard);
       spareCard = this.cards[0][y];
       spareCard.x = -1;
       spareCard.y = -1;
@@ -232,13 +226,13 @@ Board.prototype.pushingCard = function(x, y, pushCard){
   }
 };
 
-// finds Card by id
-Board.prototype.findCard = function(id){
+// finds Player or Treasure by id
+Board.prototype.findItem = function(id){
   for (var i = 0; i < this.cards.length; i++) {
     for (var j = 0; j < this.cards[i].length; j++) {
       if (this.cards[i][j]){
         if (this.cards[i][j].id === id) {
-          return this.cards[i][j];
+          return cards[i][j];
         }
       }
     }
@@ -299,11 +293,14 @@ Card.prototype.removePlayer = function(){
   this.player = null;
 }
 
-Board.prototype.leavePlayerOnBoard = function(boardCard, newCard){
-  if (boardCard.player !== null){
-    newCard.player = boardCard.player;
-    boardCard.player = null;
+// removes Player or Treasure Id from the board
+Board.prototype.removeItem = function(id, x, y){
+  var items = this.cards[x][y].items;
+  if (items.indexOf(id) !== -1){
+    items.splice(items.indexOf(id), 1);
+    return true;
   }
+  return false;
 }
 
 //form a list of cards that can be reached from the position x,y
@@ -334,8 +331,7 @@ function Card(id, x, y){
   this.id = id,
   this.x = x,
   this.y = y,
-  this.player = null;
-  this.treasure = null;
+  this.items = [], // array of players and treasures id
   this.rightWall = false,
   this.leftWall = false,
   this.topWall = false,
@@ -479,7 +475,7 @@ UserInterface.prototype.showBoard = function(size, cards){
 
     // adding bottom row with arrows
     if (i === size - 1) {
-      htmlText += "<tr id='" + boardSize + "'>";
+      htmlText += "<tr id='" + (i-1).toString() + "'>";
       for (var j = -1; j < size + 1; j++) {
         if ((j % 2 === 1) && j !== size) {
           htmlText += "<th id='arrow" + i.toString() + "_" + j.toString() + "'><img class='rotate0 arrow' src='img/arrow.png'></th>";
@@ -610,10 +606,9 @@ var indexofMax = function(arr) {
     return maxIndex;
 }
 
-var boardSize = 5;
 var numTreasures = 8;
-
-var game = new Game(boardSize);
+var boardSize;
+var game = null;
 
 //function attachListeners(){
 UserInterface.prototype.attachListeners = function(){
@@ -632,9 +627,7 @@ UserInterface.prototype.attachListeners = function(){
       var underlineIndex = this.id.indexOf("_");
       var x = parseInt(this.id.substring(5, underlineIndex));
       var y = parseInt(this.id.substring(underlineIndex + 1, this.id.length));
-        //userInt.onArrowClick(x, y);
-
-      game.clickArrow(x, y);
+        userInt.onArrowClick(x, y);
     }
 
 
@@ -649,41 +642,55 @@ UserInterface.prototype.attachListeners = function(){
   });
 }
 
-$(document).ready(function(){
-  //attachListeners();
-  game.initialize();
-  var player1 = new Player("player1");
-  game.addPlayer(player1);
-  var player2 = new Player("player2");
-  game.addPlayer(player2);
-  var player3 = new Player("player3");
-  game.addPlayer(player3);
-  var player4 = new Player("player4");
-  game.addPlayer(player4);
-  game.userInterface.showBoard(game.boardSize, game.board.cards);
+$(document).ready(function() {
+  $("#form").submit(function(event){
+    event.preventDefault();
+    var theName = $("input#name").val();
+    var theSize = parseInt($("input#size").val());
 
-  console.log(game.board.cards);
-  //game.board.removeItem(0, 0, 0);
-  console.log(game.board.cards);
-  // treasure = new Treasure("Treasure 1");
-  // game.addTreasure(treasure);
-  //
-  // game.startGame();
-console.log(game);
+    if(game === null){
+       if(theSize%2!==0 && theSize >= 3){
+        boardSize = theSize;
+        game = new Game(boardSize);
+        game.initialize();
 
-  $("#main").click(function(){
+        $("input#size").val(theSize + "x" + theSize);
+        $("input#size").prop('disabled', true);
+      }else{
+        alert("Please enter an odd number.");
+        $("input#size").focus();
+      }
+    }
 
-    // var id = 0;
-    // for (var i = 0; i < cards.length; i++) {
-    //   for (var j = 0; j < cards[i].length; j++) {
-    //     var card = new Card(id, i, j);
-    //     id += 1;
-    //     cards[i][j] = card;
-    //   };
-    // };
+    if (theName){
+      if (game !== null) {
+        var nameCapitalized = theName.charAt(0).toUpperCase()+theName.slice(1);
+        var player = new Player(nameCapitalized);
 
-console.log(cards);
+        game.addPlayer(player);
+        $("input#name").val("");
+        $("input#name").focus();
+        $("ul#showListOfPlayers").empty();
+        game.players.forEach(function(player){
+          $("ul#showListOfPlayers").append("<li id=" + player.id + "><h3>" + player.name + "</h3></li>");
+        });
+        $(".letsPlay").show();
+      }
+    }
+    else {
+      alert("Please enter a name.");
+      $("input#name").focus();
+    }
+  });
 
+  $("#letsPlay").click(function(){
+    game.players.forEach(function(player){
+      $(".showScore").append("<h3><span id=" + player.id + ">" + player.name + "</span>, here's your score:</h3>");
+      $(".showScore").append("<h3>" + player.treasures + "</h3>");
+    });
+    $("#startScreen").hide();
+    $(".showScore").show();
+    $("#showGame").fadeToggle();
 
   });
 });

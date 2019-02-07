@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
     <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
     <link href="css/styles.css" rel="stylesheet" type="text/css">
     <script src="js/jquery-3.3.1.js"></script>
@@ -12,42 +15,119 @@
     <title>Amazing Labyrinth</title>
   </head>
   <body>
-    <!-- <img class="rotate180" src="img/straight.png" alt=""> -->
-    <table id="board">
-      <!-- <tr class="box">
-        <th><img class="under" src="img/straight.png" alt=""><img class="over" src="img/treasure1.png" alt="">   as</th>
-      </tr>
-      <tr>
-        <td>Jill</td>
-        <td>Smith</td>
-        <td>50</td>
-      </tr>
-      <tr>
-        <td>Eve</td>
-        <td>Jackson</td>
-        <td>94</td>
-      </tr> -->
-    </table>
-    <br>
-    <div id="gameInfo">
-      <table>
-        <tr>
-          <th id="cardToUse"></th>
-          <th id="currentTreasure"></th>
-          <th id="currentPlayer"></th>
-        </tr>
-        <tr>
-          <th id="cardToUseText">This is the current piece. Click to rotate it.</th>
-          <th id="currentTreasureText">This is the current treasure goal.</th>
-          <th id="currentAction"></th>
-        </tr>
-      </table>
+    <div class="container">
+        <img id="headerPic" src="img/backgroundName.png" alt="Name of the game" >
+
+        <div id="startScreen">
+          <div class="well">
+            <h3>Welcome to the Labyrinth!</h3>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-brown btn-lg" data-toggle="modal" data-target="#myModal">Show Rules!</button>
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Amazing Labyrinth Rules</h4>
+                  </div>
+                  <div class="modal-body">
+                    <p>
+                      Here are some rules for you!
+                      Shuffle the cards and place them face up on the board at random, thereby creating a chance patterning of
+                      maze corridors. One maze card will be left over. Shuffle the 24 treasure cards and deal them out equally
+                      among the players face down. Choose a playing piece and place it on the board on the corner position of the
+                      same color.
+                    </p>
+                    <p>
+                      Turns are taken in clockwise direction. The players decide who will begin.
+                      If you are the first player, look at your first treasure card and return it, face down, to your pile of cards. This
+                      is your first GOAL in the labyrinth. You may not look at your other cards until you have reached this first
+                      GOAL.
+                    </p>
+                    <p>
+                      To reach your goal you must shift the walls of the maze. This is done by pushing the extra maze card into
+                      the labyrinth at some point so that you can move as far as you wish along its open passageways.
+                      From the edge of the board push the extra maze card into the labyrinth. The places where the maze card can
+                      be added are indicated on the edge of the board by an arrow. The maze card that is pushed out will become
+                      the next player's means of shifthing the maze. Until the next player's turn, the new extra maze card is left
+                      where it is so that all players will know how the maze has been shifted on this turn.
+                      You must move the maze before each turn, even if you don't need to in order to reach your goal. This way
+                      you can wall in another player!
+                      You may not immediately reverse the last player's move by returning the extra card to the position it was
+                      just pushed out of.
+                    </p>
+                    <p>
+                      If the shifting maze pushes out a player's piece, the piece is transferred to the newly inserted maze card at
+                      the other side. This applies whether the piece belongs to the person making the move or to another player.
+                      Transferring this piece does not count as a move.
+                      After shifting the maze, move your playing piece as far as you choose along the open corridor. You can also
+                      choose not to move at all. Often you will be able to reach your goal in one move. If not, try to get in the best
+                      possible position for your next turn.
+                    </p>
+                    <p>
+                      More than one playing piece can occupy a single square. Once you reach your first goal, turn over the top
+                      treasure card and leave it face up beside your pile of cards. The next card in the pile will be your next goal.
+                      The turn then passes to the next player.
+                    </p>
+                    <p>
+                      END OF GAME: Once you have reached all your goals you must return to the corner position from which
+                      you entered the labyrinth. The winner is the first player to turn up all the treasure cards and return to his or
+                      her starting position.
+                    </p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-brown" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <form id="form">
+            <div class="form-group">
+              <label class="control-label" for="size">Enter grid size:</label>
+              <input type="text" placeholder="Enter even number!" class="form-control" id="size" aria-describedby="helpBlock2">
+
+              <label class="control-label" for="name">Enter your name here:</label>
+              <input type="text" class="form-control" id="name" aria-describedby="helpBlock2">
+              <span id="helpBlock2" class="help-block">Good luck in hunting all treasures!</span>
+            </div>
+            <button type="submit" class="btn btn-brown btn-lg">Add player!</button>
+          </form>
+          <ul id="showListOfPlayers">
+          </ul>
+          <div class="letsPlay">
+            <button id="letsPlay" type="button" class="btn btn-brown btn-lg">Lets Play!</button>
+
+          </div>
+        </div>
+
+        <div id="showGame" class="row">
+          <div class="col-sm-3">
+            <div class="well showScore">
+            </div>
+          </div>
+          <div class="col-sm-5">
+            <table id="board">
+            </table>
+            <br>
+            <div id="gameInfo">
+              <table>
+                <tr>
+                  <th id="cardToUse"></th>
+                  <th id="currentTreasure"></th>
+                  <th id="currentPlayer"></th>
+                </tr>
+                <tr>
+                  <th id="cardToUseText">This is the current piece. Click to rotate it.</th>
+                  <th id="currentTreasureText">This is the current treasure goal.</th>
+                  <th id="currentAction"></th>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
     </div>
-    <!-- <p id="cardToUseText">Click to rotate the image. The current Treasure. <span id="currentAction"></span></p> -->
-    <!-- <p id="currentTreasureText">The current treasure:</p> -->
-    <!-- <div id="currentTreasure">
-    </div> -->
-    <!-- <div id="currentAction">
-    </div> -->
+
   </body>
 </html>

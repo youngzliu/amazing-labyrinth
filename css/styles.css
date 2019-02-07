@@ -63,6 +63,23 @@ body {
     transform: rotate(270deg);
 }
 
+h1, h3 {
+  text-align: center;
+}
+
+#showRules{
+  display: none;
+}
+
+.btn{
+  margin:auto;
+  display:block;
+}
+
+#showScore{
+  display: none;
+}
+
 #gameInfo{
   margin-left: 130px;
 }
@@ -77,6 +94,7 @@ body {
   left: 22%;
   width: 60%;
   border: none;
+
 }
 
 .playerImage{
@@ -86,6 +104,21 @@ body {
   width: 60%;
   opacity: .5;
   border: none;
+}
+
+#showGame {
+  display: none;
+}
+#startScreen{
+  margin-left: 30%;
+  margin-right: 30%;
+}
+.btn{
+  margin-top: 1%;
+  color: #fff;
+  background-color: #ffa64d;
+  border-color: #A45F24;
+
 }
 
 .freeCardTreasure{
@@ -113,39 +146,60 @@ body {
   border-collapse: separate;
 }
 
-/*#currentTreasureText{
-  font-weight: bold;
-  font-size: 30px;
-  margin-left: 200px;
+
+.container{
+  text-align: center;
 }
 
-#currentTreasure{
-  margin-left: 290px;
-}*/
-
-/*#currentAction{
-  font-weight: bold;
-  font-size: 30px;
-  margin-left: 75px;
-  color: red;
-}*/
-
-
-/*
-.over {
-    width: 30px;
-    position:absolute;
-    top: 70px;
-    left: 70px;
-    z-index:100;
+#headerPic{
+  width: 100%
 }
 
-.under {
-  width: 100px;
-  position:absolute;
-  z-index:99;
-} */
+.well{
+    margin-top: 5%;
+    border-radius: 20px;
+}
 
-/* .box {
-    position:relative;
-} */
+ul{
+  list-style-type: none;
+  padding-right: 10%;
+  text-align: center;
+  color: #A45F24;
+}
+
+.form-control, .help-block, .control-label{
+  color: #A45F24;
+  border-color: #A45F24;
+}
+
+.well{
+  border-color: #A45F24;
+}
+
+.letsPlay{
+  display: none;
+}
+
+.btn-brown:focus,
+.btn-brown.focus{
+  color: #fff;
+  background-color: #ffa64d;
+  border-color: #A45F24;
+}
+
+.btn-brown:hover{
+  color: #fff;
+}
+.btn-brown:active,
+.btn-brown.active,
+.open > .dropdown-toggle.btn-brown {
+  color: #fff;
+  background-color: #A45F24;
+  border-color: #A45F24;
+}
+
+.form-group input{
+  width: 40%;
+  margin-left: 30%;
+  text-align: center;
+}
