@@ -2,6 +2,13 @@ img.highlight{
   border: 5px solid #ffa64d; //#E0624C;
 }
 
+img.highlightTreasure{
+  border: 3px solid red;//#fbf7f7; //#E0624C;
+  top: 12%;
+  left: 12%;
+  width: 75%;
+}
+
 img{
   width: 120px;
   border: 2px solid #A45F24; //#664B2F; //#513324; //#D57719;//#E0624C;
@@ -10,6 +17,7 @@ img{
 
 th {
   text-align: center;
+  position: relative;
 }
 
 body {
@@ -72,19 +80,29 @@ h1, h3 {
   display: none;
 }
 
+#gameInfo{
+  margin-left: 130px;
+}
 
-
-#cardToUseText{
-margin-left: 20%;
-margin-top: 3%;
-color: #5cb85c;
+#cardToUseText, #currentTreasureText, #currentAction{
+  width: 120px;
 }
 
 .treasureImage{
   position: absolute;
-  top: 25%;
-  left: 25%;
+  top: 22%;
+  left: 22%;
   width: 60%;
+  border: none;
+
+}
+
+.playerImage{
+  position: absolute;
+  top: 22%;
+  left: 22%;
+  width: 60%;
+  opacity: .5;
   border: none;
 }
 
@@ -102,6 +120,32 @@ color: #5cb85c;
   border-color: #A45F24;
 
 }
+
+.freeCardTreasure{
+  position: absolute;
+  top: 22%;
+  left: 22%;
+  width: 60%;
+  border: none;
+}
+
+.freeCardTreasureCurrent{
+  position: absolute;
+  border: 3px solid red;
+  top: 12%;
+  left: 12%;
+  width: 75%;
+}
+
+#currentPlayer img{
+  opacity: .75;
+}
+
+#gameInfo table{
+  border-spacing: 20px;
+  border-collapse: separate;
+}
+
 
 .container{
   text-align: center;

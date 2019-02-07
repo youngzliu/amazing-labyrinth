@@ -3,10 +3,12 @@ function Game(size){
   this.playerId = 0,
   this.currentPlayer,
   this.treasures = [],
-  this.treasureId = 10,
+  this.treasureId = 0,
   this.currentTreasure,
   this.boardSize = size,
-  this.defaulPlayerPosition = [[0, 0], [0, size-1], [size-1, 0], [size-1, size-1]]
+  this.defaulPlayerPosition = [[0, 0], [0, size-1], [size-1, 0], [size-1, size-1]],
+  this.gameOver = false,
+  this.gameState = 0
 }
 
 Game.prototype.initialize = function(){
@@ -27,19 +29,121 @@ function Player(inputName){
   this.treasures = [];
 }
 
+Game.prototype.initializeTreasures = function(){
+  console.log(this);
+  var count = 0;
+  var treasureIDs = [];
+  for(var i = 1; i <= numTreasures; i++){
+    treasureIDs.push(i);
+  }
+  shuffle(treasureIDs);
+  while (count < numTreasures){
+    var x = Math.floor(Math.random() * boardSize);
+    var y = Math.floor(Math.random() * boardSize);
+    if (!(this.board.checkTreasure(x, y))){
+      var treasure = new Treasure("treasure" + treasureIDs[count]);
+      treasure.id = this.treasureId;
+      this.treasureId += 1;
+      this.treasures.push(treasure);
+      if (treasure.id === 0) {
+        this.currentTreasure = treasure;
+      }
+      this.board.placeTreasure(treasure, x, y);
+      count++;
+    }
+    // if(!this.board.cards[x][y].treasure){
+    //   this.board.cards[x][y].treasure = new Treasure("treasure" + count);
+    //
+    //   count++;
+    // }
+
+  }
+}
+
+Game.prototype.switchPlayer = function(){
+  this.currentPlayer = this.players[(this.currentPlayer.id + 1) % this.players.length];
+}
+
+Game.prototype.checkTreasure = function(x, y){
+  var treasureOnTheCard = this.board.returnTreasure(x, y);
+  if (treasureOnTheCard !== null){
+    if (treasureOnTheCard === this.currentTreasure){
+      return true;
+    }
+  }
+  return false;
+}
+
+function Treasure(name){
+  this.name = name;
+}
+
 UserInterface.prototype.onCardClick = function(callback){
   //callback();
   callback.apply(this);
 }
 
+Board.prototype.returnTreasure = function(x, y) {
+  return this.cards[x][y].treasure;
+}
+
+Game.prototype.addTreasureToPlayer = function(){
+  this.currentPlayer.treasures.push(this.currentTreasure);
+}
+
+Game.prototype.setNewTreasure = function(){
+  if(this.currentTreasure.id < this.treasures.length-1){
+    this.currentTreasure = this.treasures[this.currentTreasure.id + 1];
+    return true;
+  }
+  return false;
+}
+
+Game.prototype.setGameOver = function(over){
+  if (over){
+    this.gameOver = true;
+    this.currentPlayer = null;
+  }
+}
+
 Game.prototype.clickCard = function(x, y){
-  var accessibleCards = this.board.getAccessibleCards(x, y);
-  console.log(accessibleCards);
+
+  if((!this.gameOver) && (this.gameState % 2 === 1) && (this.accessibleCards.indexOf(this.board.cards[x][y]) >= 0)){
+    var playerCard = this.board.findPlayer(this.currentPlayer);
+    if ((this.board.cards[x][y].player === null) || (this.board.cards[x][y].player === this.currentPlayer)) {
+      this.board.removePlayer(playerCard.x, playerCard.y);
+      this.board.placePlayer(this.currentPlayer, x, y);
+
+      if (this.checkTreasure(x, y) === true){
+        this.addTreasureToPlayer();
+        this.board.removeTreasure(x, y);
+        this.setGameOver(!this.setNewTreasure()); // couldn't set new treasure -> game over
+      }
+
+      if (!(this.gameOver)) {
+        this.switchPlayer();
+      } else {
+        this.userInterface.gameOver();
+      }
+      this.gameState++;
+      game.userInterface.showBoard(game.boardSize, game.board.cards);
+    }
+  }
 }
 
 Game.prototype.clickArrow = function(x, y){
-  game.board.pushingCard(x, y, game.board.freeCard);
-  game.userInterface.showBoard(game.boardSize, game.board.cards);
+  if((!this.gameOver) && (this.gameState % 2 === 0)){
+    game.board.pushingCard(x, y, game.board.freeCard);
+    this.accessibleCards = [];
+    var playerCard = this.board.findPlayer(this.currentPlayer);
+    this.accessibleCards = this.board.getAccessibleCards(playerCard.x, playerCard.y);
+    console.log(this.accessibleCards);
+    console.log(this.userInterface);
+    this.gameState++;
+    game.userInterface.showBoard(game.boardSize, game.board.cards);
+    this.userInterface.HighlightCards(this.accessibleCards, true);
+  }
+
 }
 
 Game.prototype.addPlayer = function(player){
@@ -136,9 +240,57 @@ Board.prototype.findItem = function(id){
   return false;
 }
 
-// place Player or Treasure Id on the board
-Board.prototype.placeItem = function(itemId, x, y){
-  this.cards[x][y].items.push(itemId);
+Board.prototype.findPlayer = function(player){
+  for (var i = 0; i < this.cards.length; i++) {
+    for (var j = 0; j < this.cards[i].length; j++) {
+      if (this.cards[i][j]){
+        if (this.cards[i][j].player === player) {
+          return this.cards[i][j];
+        }
+      }
+    }
+  }
+  return false;
+}
+
+Board.prototype.placePlayer = function(player, x, y){
+  this.cards[x][y].placePlayer(player);
+}
+
+Board.prototype.checkTreasure = function(x, y){
+  return this.cards[x][y].checkTreasure();
+}
+
+Board.prototype.placeTreasure = function(treasure, x, y){
+  this.cards[x][y].placeTreasure(treasure);
+}
+
+Board.prototype.removePlayer = function(x, y){
+  this.cards[x][y].removePlayer();
+}
+
+Board.prototype.removeTreasure = function(x, y){
+  this.cards[x][y].removeTreasure();
+}
+
+Card.prototype.checkTreasure = function(){
+  if (this.treasure !== null){
+    return true;
+  }
+  return false;
+}
+
+Card.prototype.placeTreasure = function(treasure){
+  this.treasure = treasure;
+}
+Card.prototype.placePlayer = function(player){
+  this.player = player;
+}
+Card.prototype.removeTreasure = function(){
+  this.treasure = null;
+}
+Card.prototype.removePlayer = function(){
+  this.player = null;
 }
 
 // removes Player or Treasure Id from the board
@@ -160,15 +312,16 @@ Board.prototype.getAccessibleCards = function(x, y){
     };
   };
 
-  console.log(this);
-
-
   traverceGraphInDeep(this.cards[x][y].node);
 
   var accessibleCards = [];
+  var card;
   for (var i = 0; i < this.nodes.length; i++) {
     if (this.nodes[i].visited === true) {
-      accessibleCards.push(this.nodes[i].id);
+      card = this.findCard(this.nodes[i].id);
+      if ((card.player === null) || (card.x === x && card.y === y)){
+        accessibleCards.push(this.findCard(this.nodes[i].id));
+      }
     }
   };
   return accessibleCards;
@@ -266,6 +419,27 @@ function UserInterface(){
   this.images = ["straight.png", "corner.png", "t-shape.png"]
 }
 
+UserInterface.prototype.HighlightCards = function(accessibleCards, highlight){
+  if (highlight) {
+    for (var i = 0; i < accessibleCards.length; i++) {
+      $("#card" + accessibleCards[i].x.toString() + "_" + accessibleCards[i].y.toString()).children().first().addClass("highlight");
+    };
+  } else {
+    for (var i = 0; i < accessibleCards.length; i++) {
+      $("#card" + accessibleCards[i].x.toString() + "_" + accessibleCards[i].y.toString()).childern().first().deleteClass("highlight");
+    };
+  }
+}
+
+UserInterface.prototype.gameOver = function(){
+  var countTreasures = [];
+  game.players.forEach(function(person){
+    countTreasures.push(person.treasures.length);
+  });
+  var index = indexofMax(countTreasures);
+  alert("Game over. " + game.players[index].name + " has won!");
+}
+
 UserInterface.prototype.showBoard = function(size, cards){
   var tag = $("#board");
   var htmlText = "";
@@ -314,8 +488,46 @@ UserInterface.prototype.showBoard = function(size, cards){
 
   };
   tag.html(htmlText);
+
+  var highlightTreasure = "";
+  var playerImage = "";
+  for(var i = 0; i < size; i++){
+    for(var j = 0; j < size; j++){
+      if(cards[i][j].treasure){
+        if (cards[i][j].treasure === game.currentTreasure){
+          highlightTreasure = " highlightTreasure ";
+        } else {highlightTreasure = "";}
+        $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].treasure.name + ".png' class='treasureImage" + highlightTreasure + "'>");
+      }
+      if(cards[i][j].player){
+        if (cards[i][j].player === game.currentPlayer){
+          playerImage = "_new_red.png";
+        } else {
+          playerImage = "_new_black.png";
+        }
+        $("th#card" + i + "_" + j).append("<img src='img/" +  cards[i][j].player.name + playerImage + "' class='playerImage'>");
+      }
+    };
+  };
   var cardToUse = "<img class='rotate" + game.board.freeCard.rotationAngle + "' src='img/" + this.images[game.board.freeCard.type] + "' id='freeCard'>";
   $("#cardToUse").html(cardToUse);
+  if(game.board.freeCard.treasure){
+    $("#cardToUse").append("<img src='img/" + game.board.freeCard.treasure.name + ".png' class='freeCardTreasure'>");
+    if(game.board.freeCard.treasure === game.currentTreasure){
+      $(".freeCardTreasure").addClass("freeCardTreasureCurrent");
+      $(".freeCardTreasure").removeClass("freeCardTreasure");
+    }
+  }
+  $("#currentTreasure").html("<img src='img/" + game.currentTreasure.name + ".png'>")
+  if(game.gameState % 2 === 0 && game.currentPlayer){
+    $("#currentAction").text("It is " + game.currentPlayer.name + "'s turn to shift in a maze piece.");
+  }
+  else if (game.currentPlayer){
+    $("#currentAction").text("It is " + game.currentPlayer.name + "'s turn to move their piece.");
+  }
+  if(game.currentPlayer){
+    $("#currentPlayer").html("<img src='img/" + game.currentPlayer.name + "_new_red.png'>");
+  }
 }
 
 Board.prototype.initializeCards = function(){
@@ -331,7 +543,29 @@ Board.prototype.initializeCards = function(){
       cardId += 1;
 // need to REPLACE:
 // should be specific number of each cards!
-      this.cards[i][j].setInitialParameters();
+      if(i === 0 && j === 0){
+        this.cards[i][j].type = 1;
+        this.cards[i][j].rotationAngle = 270;
+        this.cards[i][j].setWalls();
+      }
+      else if(i === 0 && j === 4){
+        this.cards[i][j].type = 1;
+        this.cards[i][j].rotationAngle = 0;
+        this.cards[i][j].setWalls();
+      }
+      else if(i === 4 && j === 0){
+        this.cards[i][j].type = 1;
+        this.cards[i][j].rotationAngle = 180;
+        this.cards[i][j].setWalls();
+      }
+      else if(i === 4 && j === 4){
+        this.cards[i][j].type = 1;
+        this.cards[i][j].rotationAngle = 90;
+        this.cards[i][j].setWalls();
+      }
+      else{
+        this.cards[i][j].setInitialParameters();
+      }
     }
   }
   this.freeCard = new Card(cardId, -1, -1);
@@ -347,7 +581,32 @@ Card.prototype.setInitialParameters = function(){
   this.setWalls();
 }
 
+var shuffle = function(arr){
+  var j, x, i;
+  for (i = arr.length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1));
+      x = arr[i];
+      arr[i] = arr[j];
+      arr[j] = x;
+  };
+}
 
+var indexofMax = function(arr) {
+    if (arr.length === 0) {
+        return -1;
+    }
+    var max = arr[0];
+    var maxIndex = 0;
+    for (var i = 1; i < arr.length; i++) {
+        if (arr[i] > max) {
+            maxIndex = i;
+            max = arr[i];
+        }
+    };
+    return maxIndex;
+}
+
+var numTreasures = 8;
 var boardSize;
 var game = null;
 
@@ -377,38 +636,11 @@ UserInterface.prototype.attachListeners = function(){
     game.board.freeCard.rotate();
     game.userInterface.showBoard(game.boardSize, game.board.cards);
   });
-}
-
-$(document).ready(function(){
-  //attachListeners();
-
-
-
-//   console.log(game.board.cards);
-//   //game.board.removeItem(0, 0, 0);
-//   console.log(game.board.cards);
-//   // treasure = new Treasure("Treasure 1");
-//   // game.addTreasure(treasure);
-//   //
-//   // game.startGame();
-// console.log(game);
-
-  $("#main").click(function(){
-
-    // var id = 0;
-    // for (var i = 0; i < cards.length; i++) {
-    //   for (var j = 0; j < cards[i].length; j++) {
-    //     var card = new Card(id, i, j);
-    //     id += 1;
-    //     cards[i][j] = card;
-    //   };
-    // };
-
-console.log(cards);
-
-
+  $("#cardToUse").on("click", ".freeCardTreasure", function(){
+    game.board.freeCard.rotate();
+    game.userInterface.showBoard(game.boardSize, game.board.cards);
   });
-});
+}
 
 $(document).ready(function() {
   $("#form").submit(function(event){
@@ -461,6 +693,4 @@ $(document).ready(function() {
     $("#showGame").fadeToggle();
 
   });
-
-
 });
