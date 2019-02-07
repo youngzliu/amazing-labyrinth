@@ -21,8 +21,9 @@ Game.prototype.initialize = function(){
   this.userInterface.attachListeners();
 }
 
-function Player(name){
-  this.name = name;
+function Player(inputName){
+  this.name = inputName;
+  this.fileName = "";
   this.treasures = [];
 }
 
@@ -52,6 +53,7 @@ Game.prototype.addPlayer = function(player){
   }
   this.players.push(player);
   player.id = this.playerId;
+  player.fileName = "Player" + (player.id + 1).toString();
 
   this.board.placeItem(player.id, this.defaulPlayerPosition[player.id][0], this.defaulPlayerPosition[player.id][1]);
   this.playerId += 1;
@@ -346,8 +348,8 @@ Card.prototype.setInitialParameters = function(){
 }
 
 
-
-var game = new Game(boardSize);
+var boardSize;
+var game = null;
 
 //function attachListeners(){
 UserInterface.prototype.attachListeners = function(){
@@ -379,18 +381,17 @@ UserInterface.prototype.attachListeners = function(){
 
 $(document).ready(function(){
   //attachListeners();
-  game.initialize();
 
 
 
-  console.log(game.board.cards);
-  //game.board.removeItem(0, 0, 0);
-  console.log(game.board.cards);
-  // treasure = new Treasure("Treasure 1");
-  // game.addTreasure(treasure);
-  //
-  // game.startGame();
-console.log(game);
+//   console.log(game.board.cards);
+//   //game.board.removeItem(0, 0, 0);
+//   console.log(game.board.cards);
+//   // treasure = new Treasure("Treasure 1");
+//   // game.addTreasure(treasure);
+//   //
+//   // game.startGame();
+// console.log(game);
 
   $("#main").click(function(){
 
@@ -414,22 +415,40 @@ $(document).ready(function() {
     event.preventDefault();
     var theName = $("input#name").val();
     var theSize = parseInt($("input#size").val());
-    $("#form").trigger('reset');
-    var nameCapitalized = theName.charAt(0).toUpperCase()+theName.slice(1);
-    var player = new Player(nameCapitalized);
-    if(theSize%2!==0 && theSize >= 3){
-      var boardSize = new boardSize(theSize);
-    }else{
-      alert("Please enter a number.")
+
+    if(game === null){
+       if(theSize%2!==0 && theSize >= 3){
+        boardSize = theSize;
+        game = new Game(boardSize);
+        game.initialize();
+
+        $("input#size").val(theSize + "x" + theSize);
+        $("input#size").prop('disabled', true);
+      }else{
+        alert("Please enter an odd number.");
+        $("input#size").focus();
+      }
     }
 
+    if (theName){
+      if (game !== null) {
+        var nameCapitalized = theName.charAt(0).toUpperCase()+theName.slice(1);
+        var player = new Player(nameCapitalized);
 
-    game.addPlayer(player);
-    $("ul#showListOfPlayers").empty();
-    game.players.forEach(function(player){
-      $("ul#showListOfPlayers").append("<li id=" + player.id + "><h3>" + player.name + "</h3></li>");
-    });
-    $(".letsPlay").show();
+        game.addPlayer(player);
+        $("input#name").val("");
+        $("input#name").focus();
+        $("ul#showListOfPlayers").empty();
+        game.players.forEach(function(player){
+          $("ul#showListOfPlayers").append("<li id=" + player.id + "><h3>" + player.name + "</h3></li>");
+        });
+        $(".letsPlay").show();
+      }
+    }
+    else {
+      alert("Please enter a name.");
+      $("input#name").focus();
+    }
   });
 
   $("#letsPlay").click(function(){
@@ -440,6 +459,7 @@ $(document).ready(function() {
     $("#startScreen").hide();
     $(".showScore").show();
     $("#showGame").fadeToggle();
+
   });
 
 
