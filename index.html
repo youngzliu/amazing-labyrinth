@@ -22,7 +22,7 @@
           <div class="well">
             <h3>Welcome to the Labyrinth!</h3>
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#myModal">Show Rules!</button>
+            <button type="button" class="btn btn-brown btn-lg" data-toggle="modal" data-target="#myModal">Show Rules!</button>
             <!-- Modal -->
             <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
               <div class="modal-dialog" role="document">
@@ -77,23 +77,30 @@
                     </p>
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-success btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-brown" data-dismiss="modal">Close</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <form id="form">
-            <div class="form-group has-success">
+            <div class="form-group">
+              <label class="control-label" for="size">Enter grid size:</label>
+              <span id="helpBlock2" class="help-block">Enter even number!</span>
+              <input type="text" class="form-control" id="size" aria-describedby="helpBlock2">
+
               <label class="control-label" for="name">Enter your name here:</label>
               <input type="text" class="form-control" id="name" aria-describedby="helpBlock2">
               <span id="helpBlock2" class="help-block">Good luck in hunting all treasures!</span>
             </div>
-            <button type="submit" class="btn btn-success btn-md">Add player!</button>
+            <button type="submit" class="btn btn-brown btn-lg">Add player!</button>
           </form>
           <ul id="showListOfPlayers">
           </ul>
-            <button id="letsPlay" type="button" class="btn btn-success btn-lg">Lets Play!</button>
+          <div class="letsPlay">
+            <button id="letsPlay" type="button" class="btn btn-brown btn-lg">Lets Play!</button>
+
+          </div>
         </div>
 
         <div id="showGame" class="row">

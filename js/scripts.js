@@ -345,7 +345,7 @@ Card.prototype.setInitialParameters = function(){
   this.setWalls();
 }
 
-var boardSize = 5;
+
 
 var game = new Game(boardSize);
 
@@ -413,15 +413,23 @@ $(document).ready(function() {
   $("#form").submit(function(event){
     event.preventDefault();
     var theName = $("input#name").val();
+    var theSize = parseInt($("input#size").val());
     $("#form").trigger('reset');
     var nameCapitalized = theName.charAt(0).toUpperCase()+theName.slice(1);
     var player = new Player(nameCapitalized);
+    if(theSize%2!==0 && theSize >= 3){
+      var boardSize = new boardSize(theSize);
+    }else{
+      alert("Please enter a number.")
+    }
+
 
     game.addPlayer(player);
-
+    $("ul#showListOfPlayers").empty();
     game.players.forEach(function(player){
       $("ul#showListOfPlayers").append("<li id=" + player.id + "><h3>" + player.name + "</h3></li>");
     });
+    $(".letsPlay").show();
   });
 
   $("#letsPlay").click(function(){

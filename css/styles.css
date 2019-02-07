@@ -72,17 +72,12 @@ h1, h3 {
   display: none;
 }
 
-margin-left: 20%;
-}
+
 
 #cardToUseText{
 margin-left: 20%;
 margin-top: 3%;
 color: #5cb85c;
-}
-
-th{
-  position: relative;
 }
 
 .treasureImage{
@@ -101,7 +96,11 @@ th{
   margin-right: 30%;
 }
 .btn{
-  margin-top: 1%
+  margin-top: 1%;
+  color: #fff;
+  background-color: #ffa64d;
+  border-color: #A45F24;
+
 }
 
 .container{
@@ -111,20 +110,50 @@ th{
 #headerPic{
   width: 100%
 }
-/*.over {
-    width: 30px;
-    position:absolute;
-    top: 70px;
-    left: 70px;
-    z-index:100;
+
+.well{
+    margin-top: 5%;
+    border-radius: 20px;
 }
 
-.under {
-  width: 100px;
-  position:absolute;
-  z-index:99;
-} */
+ul{
+  list-style-type: none;
+  padding-right: 10%;
+  color: #A45F24;
+}
 
-/* .box {
-    position:relative;
-} */
+.form-control, .help-block, .control-label{
+  color: #A45F24;
+  border-color: #A45F24;
+}
+
+.well{
+  border-color: #A45F24;
+}
+
+.letsPlay{
+  display: none;
+}
+
+.btn-brown:focus,
+.btn-brown.focus{
+  color: #fff;
+  background-color: #ffa64d;
+  border-color: #A45F24;
+}
+
+.btn-brown:hover{
+  color: #fff;
+}
+.btn-brown:active,
+.btn-brown.active,
+.open > .dropdown-toggle.btn-brown {
+  color: #fff;
+  background-color: #A45F24;
+  border-color: #A45F24;
+}
+
+.form-group input{
+  width: 40%;
+  margin-left: 30%;
+}
