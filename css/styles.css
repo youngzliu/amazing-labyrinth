@@ -17,6 +17,7 @@ img{
 
 th {
   text-align: center;
+  position: relative;
 }
 
 body {
@@ -62,16 +63,12 @@ body {
     transform: rotate(270deg);
 }
 
-#cardToUseTable{
-  margin-left: 290px;
+#gameInfo{
+  margin-left: 130px;
 }
 
-#cardToUseText{
-  margin-left: 270px;
-}
-
-th{
-  position: relative;
+#cardToUseText, #currentTreasureText, #currentAction{
+  width: 120px;
 }
 
 .treasureImage{
@@ -107,7 +104,16 @@ th{
   width: 75%;
 }
 
-#currentTreasureText{
+#currentPlayer img{
+  opacity: .75;
+}
+
+#gameInfo table{
+  border-spacing: 20px;
+  border-collapse: separate;
+}
+
+/*#currentTreasureText{
   font-weight: bold;
   font-size: 30px;
   margin-left: 200px;
@@ -115,14 +121,14 @@ th{
 
 #currentTreasure{
   margin-left: 290px;
-}
+}*/
 
-#currentAction{
+/*#currentAction{
   font-weight: bold;
   font-size: 30px;
   margin-left: 75px;
   color: red;
-}
+}*/
 
 
 /*

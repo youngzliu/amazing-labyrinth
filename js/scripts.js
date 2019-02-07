@@ -529,6 +529,9 @@ UserInterface.prototype.showBoard = function(size, cards){
   else if (game.currentPlayer){
     $("#currentAction").text("It is " + game.currentPlayer.name + "'s turn to move their piece.");
   }
+  if(game.currentPlayer){
+    $("#currentPlayer").html("<img src='img/" + game.currentPlayer.name + "_new_red.png'>");
+  }
 }
 
 Board.prototype.initializeCards = function(){
