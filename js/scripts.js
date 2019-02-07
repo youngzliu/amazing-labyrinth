@@ -413,16 +413,21 @@ $(document).ready(function() {
   $("#form").submit(function(event){
     event.preventDefault();
     var theName = $("input#name").val();
-    var player = new Player(theName);
+    $("#form").trigger('reset');
+    var nameCapitalized = theName.charAt(0).toUpperCase()+theName.slice(1);
+    var player = new Player(nameCapitalized);
 
     game.addPlayer(player);
-    $("span#name").text(theName.charAt(0).toUpperCase()+theName.slice(1));
-  });
 
+    game.players.forEach(function(player){
+      $("ul#showListOfPlayers").append("<li id=" + player.id + "><h3>" + player.name + "</h3></li>");
+    });
+  });
 
   $("#letsPlay").click(function(){
     game.players.forEach(function(player){
-      $(".showScore").append("<h3>Dear, <span id=" + player.id + ">" + player.name + "</span>, here's your score:</h3>");
+      $(".showScore").append("<h3><span id=" + player.id + ">" + player.name + "</span>, here's your score:</h3>");
+      $(".showScore").append("<h3>" + player.treasures + "</h3>");
     });
     $("#startScreen").hide();
     $(".showScore").show();

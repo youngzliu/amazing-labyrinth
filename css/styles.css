@@ -58,6 +58,7 @@ body {
 h1, h3 {
   text-align: center;
 }
+
 #showRules{
   display: none;
 }
@@ -98,6 +99,17 @@ th{
 #startScreen{
   margin-left: 30%;
   margin-right: 30%;
+}
+.btn{
+  margin-top: 1%
+}
+
+.container{
+  text-align: center;
+}
+
+#headerPic{
+  width: 100%
 }
 /*.over {
     width: 30px;
