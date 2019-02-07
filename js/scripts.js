@@ -381,8 +381,7 @@ $(document).ready(function(){
   //attachListeners();
   game.initialize();
 
-  var player1 = new Player("Player 1");
-  game.addPlayer(player1);
+
 
   console.log(game.board.cards);
   //game.board.removeItem(0, 0, 0);
@@ -414,12 +413,21 @@ $(document).ready(function() {
   $("#form").submit(function(event){
     event.preventDefault();
     var theName = $("input#name").val();
-
     var player = new Player(theName);
 
+    game.addPlayer(player);
+    $("span#name").text(theName.charAt(0).toUpperCase()+theName.slice(1));
+  });
+
+
+  $("#letsPlay").click(function(){
+    game.players.forEach(function(player){
+      $(".showScore").append("<h3>Dear, <span id=" + player.id + ">" + player.name + "</span>, here's your score:</h3>");
+    });
     $("#startScreen").hide();
     $(".showScore").show();
-    $("span#name").text(theName.charAt(0).toUpperCase()+theName.slice(1));
     $("#showGame").fadeToggle();
   });
+
+
 });
